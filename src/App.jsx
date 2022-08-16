@@ -9,17 +9,21 @@ const App = () => {
   const [movies, setMovies] = useState([]);
   const [searchValue, setSearchValue] = useState("");
 
-  const getMovieRequest = async () => {
-    const url = "http://www.omdbapi.com/?s=avengers&apikey=263d22d8";
+  const getMovieRequest = async (searchValue) => {
+    const url = `http://www.omdbapi.com/?s=${searchValue}&apikey=263d22d8`;
     const response = await fetch(url);
     const responseJson = await response.json();
-    console.log(responseJson);
+    if (responseJson.Search) {
+			setMovies(responseJson.Search);
+		}
     //Thats the search-function - coming from the response
     setMovies(responseJson.Search);
   };
+  //always when the searchValue changes the useEffect will
+  //be called!
   useEffect(() => {
-    getMovieRequest();
-  }, []);
+    getMovieRequest(searchValue);
+  }, [searchValue]);
 
   return (
     <div className="container-fluid movie-app">
